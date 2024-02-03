@@ -9,8 +9,7 @@ def get_soup(url):
     try:
         with requests.Session() as session:
             response = session.get(url, headers=headers)
-            response_html = response
-            html = response_html.text
+            html = response.text
             return BeautifulSoup(html, "html.parser")
     except Exception as e:
         print(f"Failed to get {url}. Error: {e}")
@@ -53,5 +52,44 @@ def get_flipkart_data(search_text=""):
             print(rating.text)
             print(rating_count.text)
 
+def get_myntra_data(search_text=""):
+    search_text = "puma smurfs shoes"
+
+    url = f'https://www.myntra.com/{search_text}'
+
+    soup = get_soup(url)
+    # print(soup.get_text())
+    products = soup.findAll('h4', class_="products-product")
+    print(products)
+    for product in soup.findAll('li', class_="product-base"):
+        name = product.find('h4', class_="product-product")
+        print("helloooo", name.text)
+        # price = product.find('div', class_="product-price")
+        # rating = product.find('div', class_="product-rating")
+        # rating_count = product.find('div', class_="product-ratingCount")
+        # if price and name and rating and rating_count:
+        #     print(name.text)
+        #     print(price.text)
+        #     print(rating.text)
+        #     print(rating_count.text)
+
+# get_flipkart_data()
+
+
+def get_jiomart_data(search_text=""):
+    search_text = "iphone 15 pro max"
+    url = f'https://www.jiomart.com/search/{search_text}'
+
+    soup = get_soup(url)
+    products = soup.findAll('div', class_='plp-card-container')
+    print(products)
+    for product in products:
+      price = product.find('div', class_='plp-card-details-price-wrapper ')
+      print(price.text)
+        
+
+
+
+# get_jiomart_data()
 get_flipkart_data()
         
