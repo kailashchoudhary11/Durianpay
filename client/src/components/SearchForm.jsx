@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { availableFilters, availableSites, errors } from '../utils/utils';
 import axiosInstance from '../utils/apiConfig';
 
-export default function SearchForm({setShowSearchForm, setSearchData}) {
+export default function SearchForm({ setShowSearchForm, setSearchData }) {
 
   const [formData, setFormData] = useState({
     searchTerm: '',
@@ -69,8 +69,10 @@ export default function SearchForm({setShowSearchForm, setSearchData}) {
       setIsSubmitting(false);
       return;
     }
-    const res = await axiosInstance.post('/api/search/', formData);
+    // const res = await axiosInstance.post('/api/search/', formData);
+    const res = await axiosInstance.get('/api/');
     const data = res.data;
+    console.log(data);
     setSearchData(data);
     setShowSearchForm(false);
     setIsSubmitting(false);
@@ -163,7 +165,7 @@ export default function SearchForm({setShowSearchForm, setSearchData}) {
         onClick={handleSubmit}
         disabled={isSubmitting}
       >
-        {isSubmitting ? "Searching...": "Search"}
+        {isSubmitting ? "Searching..." : "Search"}
       </button>
     </form>
 
