@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { availableFilters, availableSites, errors } from '../utils/utils';
+import axiosInstance from '../utils/apiConfig';
 
-export default function SearchForm() {
+export default function SearchForm({setShowSearchForm, setSearchData}) {
 
   const [formData, setFormData] = useState({
     searchTerm: '',
@@ -15,6 +16,8 @@ export default function SearchForm() {
     site: false,
     topN: false,
   });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -59,11 +62,18 @@ export default function SearchForm() {
     return true;
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
+    setIsSubmitting(true);
+    event.preventDefault();
     if (!validateForm()) {
+      setIsSubmitting(false);
       return;
     }
-    event.preventDefault();
+    const res = await axiosInstance.post('/api/search/', formData);
+    const data = res.data;
+    setSearchData(data);
+    setShowSearchForm(false);
+    setIsSubmitting(false);
   }
 
 
@@ -151,8 +161,9 @@ export default function SearchForm() {
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
         type="button"
         onClick={handleSubmit}
+        disabled={isSubmitting}
       >
-        Search
+        {isSubmitting ? "Searching...": "Search"}
       </button>
     </form>
 
